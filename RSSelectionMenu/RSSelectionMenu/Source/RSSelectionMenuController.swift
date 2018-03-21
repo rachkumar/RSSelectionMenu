@@ -320,7 +320,7 @@ extension RSSelectionMenu {
             navigationBar.barTintColor = theme.color
             navigationBar.tintColor = theme.tintColor ?? UIColor.white
             navigationItem.title = theme.title
-            navigationBar.titleTextAttributes = theme.attributes
+            navigationBar.titleTextAttributes = theme.attributes as [String : Any]?
         }
     }
 }
