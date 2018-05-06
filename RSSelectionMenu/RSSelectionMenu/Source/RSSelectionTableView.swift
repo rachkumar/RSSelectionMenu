@@ -26,7 +26,7 @@ import UIKit
 
 /// RSSelectionTableView
 open class RSSelectionTableView<T>: UITableView {
-
+    
     // MARK: - Properties
     
     /// parent view
@@ -43,6 +43,8 @@ open class RSSelectionTableView<T>: UITableView {
     
     /// delegate for search bar search result
     var searchBarResultDelegate: UISearchBarResult<T>?
+    
+    var okayButtonDelegate: OkayButtonResult?
     
     /// selection type - default is single selection
     var selectionType: SelectionType = .Single
@@ -118,6 +120,7 @@ extension RSSelectionTableView {
                 self?.selectionDataSource?.update(dataSource: (self?.selectionDataSource?.dataSource)!, inTableView: self!)
             }else {
                 let filteredDataSource = self?.searchBarResultDelegate!(searchText) ?? []
+                self?.selectionMenu?.bringOkayButton(toFront: filteredDataSource.count == 0)
                 self?.selectionDataSource?.update(dataSource: filteredDataSource, inTableView: self!)
             }
         }

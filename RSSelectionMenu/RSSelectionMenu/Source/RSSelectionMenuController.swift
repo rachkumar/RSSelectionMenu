@@ -26,7 +26,7 @@ import UIKit
 
 /// RSSelectionMenuController
 open class RSSelectionMenu<T>: UIViewController, UIPopoverPresentationControllerDelegate, UIGestureRecognizerDelegate {
-
+    
     // MARK: - Outlets
     public var tableView: RSSelectionTableView<T>?
     
@@ -58,6 +58,10 @@ open class RSSelectionMenu<T>: UIViewController, UIPopoverPresentationController
     /// backgroundView
     fileprivate var backgroundView = UIView()
     
+    fileprivate var okayButton: UIButton? = nil
+    
+    fileprivate var okayButtonResult: OkayButtonResult?
+    
     // MARK: - Life Cycle
     
     convenience public init(dataSource: DataSource<T>, cellConfiguration configuration: @escaping UITableViewCellConfiguration<T>) {
@@ -76,7 +80,7 @@ open class RSSelectionMenu<T>: UIViewController, UIPopoverPresentationController
         
         // delegate
         let selectionDelegate = RSSelectionMenuDelegate<T>(selectedItems: [])
-     
+        
         // initilize tableview
         self.tableView = RSSelectionTableView<T>(selectionType: selectionType, cellType: cellType, dataSource: selectionDataSource, delegate: selectionDelegate, from: self)
     }
@@ -85,7 +89,18 @@ open class RSSelectionMenu<T>: UIViewController, UIPopoverPresentationController
         super.viewDidLoad()
         
         setupViews()
-        setupLayout()        
+        setupLayout()
+        
+        okayButton = UIButton.init()
+        if let okayButton = okayButton {
+            okayButton.frame = CGRect.init(origin: .zero, size: CGSize.init(width: 80, height: 30))
+            okayButton.setTitle("Okay", for: .normal)
+            okayButton.setTitleColor(okayButton.tintColor, for: .normal)
+            okayButton.center = self.view.center
+            okayButton.addTarget(self, action: #selector(didClickOkayButton(sender:)), for: .touchUpInside)
+            self.view.addSubview(okayButton)
+            self.view.sendSubview(toBack: okayButton)
+        }
     }
     
     override open func viewWillDisappear(_ animated: Bool) {
@@ -93,6 +108,10 @@ open class RSSelectionMenu<T>: UIViewController, UIPopoverPresentationController
         view.endEditing(true)
     }
     
+    override open func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        view.bringSubview(toFront: self.okayButton!)
+    }
     // MARK: - Setup Views
     fileprivate func setupViews() {
         backgroundView.backgroundColor = UIColor.clear
@@ -129,7 +148,7 @@ open class RSSelectionMenu<T>: UIViewController, UIPopoverPresentationController
     
     override open func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-    
+        
         setTableViewFrame()
     }
     
@@ -163,6 +182,23 @@ open class RSSelectionMenu<T>: UIViewController, UIPopoverPresentationController
         tapGesture.numberOfTapsRequired = 1
         tapGesture.delegate = self
         backgroundView.addGestureRecognizer(tapGesture)
+    }
+    
+    func bringOkayButton(toFront: Bool) {
+        if toFront {
+            self.view.bringSubview(toFront: self.okayButton!)
+        } else {
+            self.view.sendSubview(toBack: self.okayButton!)
+        }
+    }
+    
+    @IBAction func didClickOkayButton(sender: UIButton) {
+        self.dismiss()
+        if let searchBar = self.tableView?.searchControllerDelegate?.searchBar {
+            if let result = self.okayButtonResult {
+                result(searchBar.text!)
+            }
+        }
     }
     
     @objc func onBackgroundTapped(sender: UITapGestureRecognizer){
@@ -226,6 +262,10 @@ extension RSSelectionMenu {
         self.tableView?.addSearchBar(placeHolder: withPlaceHolder, tintColor: tintColor, completion: completion)
     }
     
+    public func okayButtonResult(completion: @escaping OkayButtonResult) {
+        self.okayButtonResult = completion
+    }
+    
     /// Navigationbar title and color
     public func setNavigationBar(title: String, attributes:[NSAttributedStringKey: Any]? = nil, barTintColor: UIColor? = nil, tintColor: UIColor? = nil) {
         self.navigationBarTheme = NavigationBarTheme(title: title, attributes: attributes, color: barTintColor, tintColor: tintColor)
@@ -251,10 +291,10 @@ extension RSSelectionMenu {
             }
             
             if case .Push = self.menuPresentationStyle {
-                 self.navigationController?.popViewController(animated: animated!)
+                self.navigationController?.popViewController(animated: animated!)
             }
             else {
-               self.dismiss(animated: animated!, completion: nil)
+                self.dismiss(animated: animated!, completion: nil)
             }
         }
     }
@@ -262,7 +302,7 @@ extension RSSelectionMenu {
 
 //MARK:- Private
 extension RSSelectionMenu {
-
+    
     // check if show done button
     fileprivate func showDoneButton() -> Bool {
         switch menuPresentationStyle {
@@ -324,3 +364,4 @@ extension RSSelectionMenu {
         }
     }
 }
+

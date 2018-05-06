@@ -45,6 +45,9 @@ public typealias FilteredDataSource<T> = [T]
 /// UISearchBarResult
 public typealias UISearchBarResult<T> = ((_ searchText: String) -> (FilteredDataSource<T>))
 
+/// Okay button action
+public typealias OkayButtonResult = ((String) -> ())
+
 /// SearchBar CancelButton
 public typealias SearchBarCancelButtonAttributes = (title: String, tintColor: UIColor?)
 
