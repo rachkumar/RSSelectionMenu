@@ -118,6 +118,8 @@ extension RSSelectionTableView {
         self.searchControllerDelegate?.didSearch = { [weak self] (searchText) in
             if searchText.isEmpty {
                 self?.selectionDataSource?.update(dataSource: (self?.selectionDataSource?.dataSource)!, inTableView: self!)
+
+                self?.selectionMenu?.bringOkayButton(toFront: false)
             }else {
                 let filteredDataSource = self?.searchBarResultDelegate!(searchText) ?? []
                 self?.selectionMenu?.bringOkayButton(toFront: filteredDataSource.count == 0)
