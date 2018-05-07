@@ -107,11 +107,7 @@ open class RSSelectionMenu<T>: UIViewController, UIPopoverPresentationController
         super.viewWillDisappear(true)
         view.endEditing(true)
     }
-    
-    override open func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        view.bringSubview(toFront: self.okayButton!)
-    }
+
     // MARK: - Setup Views
     fileprivate func setupViews() {
         backgroundView.backgroundColor = UIColor.clear
