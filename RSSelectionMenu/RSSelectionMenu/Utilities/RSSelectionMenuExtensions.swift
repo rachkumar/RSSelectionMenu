@@ -76,7 +76,7 @@ extension UITableViewCell {
 // MARK: - NavigationBar
 public struct NavigationBarTheme {
     var title: String?
-    var attributes: [NSAttributedStringKey: Any]?
+    var attributes: [NSAttributedString.Key: Any]?
     var color: UIColor?
     var tintColor: UIColor?
 }

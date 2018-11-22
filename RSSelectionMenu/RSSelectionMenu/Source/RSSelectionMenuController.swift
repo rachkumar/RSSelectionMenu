@@ -102,7 +102,7 @@ open class RSSelectionMenu<T>: UIViewController, UIPopoverPresentationController
             okayButton.center = self.view.center
             okayButton.addTarget(self, action: #selector(didClickOkayButton(sender:)), for: .touchUpInside)
             self.view.addSubview(okayButton)
-            self.view.sendSubview(toBack: okayButton)
+            self.view.sendSubviewToBack(okayButton)
         }
     }
     
@@ -185,9 +185,9 @@ open class RSSelectionMenu<T>: UIViewController, UIPopoverPresentationController
     
     func bringOkayButton(toFront: Bool) {
         if toFront {
-            self.view.bringSubview(toFront: self.okayButton!)
+            self.view.bringSubviewToFront(self.okayButton!)
         } else {
-            self.view.sendSubview(toBack: self.okayButton!)
+            self.view.sendSubviewToBack(self.okayButton!)
         }
     }
     
@@ -266,7 +266,7 @@ extension RSSelectionMenu {
     }
     
     /// Navigationbar title and color
-    public func setNavigationBar(title: String, attributes:[NSAttributedStringKey: Any]? = nil, barTintColor: UIColor? = nil, tintColor: UIColor? = nil) {
+    public func setNavigationBar(title: String, attributes:[NSAttributedString.Key: Any]? = nil, barTintColor: UIColor? = nil, tintColor: UIColor? = nil) {
         self.navigationBarTheme = NavigationBarTheme(title: title, attributes: attributes, color: barTintColor, tintColor: tintColor)
     }
     
@@ -364,7 +364,7 @@ extension RSSelectionMenu {
             navigationBar.barTintColor = theme.color
             navigationBar.tintColor = theme.tintColor ?? UIColor.white
             navigationItem.title = theme.title
-            navigationBar.titleTextAttributes = theme.attributes as [String : Any]?
+            navigationBar.titleTextAttributes = theme.attributes 
         }
     }
 }
